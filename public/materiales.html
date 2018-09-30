@@ -1,0 +1,75 @@
+<script src="js/materiales.js"></script>
+<div class="row">
+  <div class="col s12 right-align">
+    <a id="pdf-full" class="circle-btn waves-effect waves-light btn-small light-blue white-text" onclick="fullPDF()" style="margin-top: 10px;"><i class="material-icons left">print</i>Imprimir</a>
+    <a id="nuevo-material" class="circle-btn waves-effect waves-light btn-small light-blue white-text" onclick="$('#material-form').show();$(this).hide();$('input').val('');$('#enviardatamaterial').show();$('#editardatamaterial').hide()" style="margin-bottom: -10px;"><i class="material-icons left">add_circle_outline</i>Agregar material</a>
+  </div>
+</div>
+
+<div class="row z-depth-2" id="material-form">
+  <input type="hidden" id="subtotal">
+  <input type="hidden" id="iva">
+  <input type="hidden" id="total">
+  <div class="col s12">
+    <!--Formulario-->
+    <div class="row">
+       <div class="input-field col m6 s12">
+        <input id="descripcion_material" type="text" class="validate">
+        <label for="descripcion_material">Descripcion</label>
+      </div>
+      <div class="input-field col m6 s12">
+        <input id="cantidad_material" type="text" class="validate" onkeyup="calcularImporteMaterial()">
+        <label for="cantidad_material">Cantidad</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field col m6 s12">
+        <input id="unidad_material" type="text" class="validate">
+        <label for="unidad_material">Unidad</label>
+      </div>
+      <div class="input-field col m6 s12">
+        <input id="costo_material" type="text" class="validate" onkeyup="calcularImporteMaterial()">
+        <label for="costo_material">Costo</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field col s12">
+        <input id="importe_material" type="text" class="validate">
+        <label for="importe_material">Importe</label>
+      </div>
+    </div>
+    <div class="row right-align">
+      <div class="col s12"> 
+        <div class="col s10">
+          <a href="#!" class="cancel-btn" onclick="$('#material-form').hide();$('#nuevo-material').show();">Cancelar</a>
+        </div>
+        <div class="col s2">
+          <button id="enviardatamaterial" class="btn waves-effect waves-light light-blue white-text" type="submit" name="action" onclick="enviarDatosMateriales()">Guardar</button>
+          <button id="editardatamaterial" class="btn waves-effect waves-light light-blue white-text" type="submit" name="action" onclick="editarDatosMateriales()">Editar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row" style="overflow-x:auto;">
+  <div class="col s12">
+    <p class="table-title light-blue-text" style="font-weight:bold;">Materiales</p>
+   <!-- //Tabla con los condominios-->
+    <table class="striped">
+      <thead>
+        <th>Codigo</th>
+        <th>Descripcion</th>
+        <th>Cantidad</th>
+        <th>Unidad</th>
+        <th>Costo</th>
+        <th>Importe</th>
+        <th></th>
+        <th></th>
+      </thead>
+      <tbody id="materiales-rows">
+      </tbody>
+    </table>
+    <p class="light-blue-text" id="subtotal_materiales"></p>
+  </div>
+</div>

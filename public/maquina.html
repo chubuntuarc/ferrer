@@ -1,0 +1,71 @@
+<script src="js/maquina.js"></script>
+<div class="row">
+  <div class="col s12 right-align">
+    <a id="nueva-maquina" class="circle-btn waves-effect waves-light btn-small light-blue white-text" onclick="$('#maquina-form').show();$(this).hide();$('input').val('');$('#enviardataherramienta').show();$('#editardatamaquina').hide()" style="margin-bottom: -10px;margin-top: -35px;"><i class="material-icons left">add_circle_outline</i>Agregar maquina</a>
+  </div>
+</div>
+
+<div class="row z-depth-2" id="maquina-form">
+  <div class="col s12">
+    <!--Formulario-->
+    <div class="row">
+       <div class="input-field col m6 s12">
+        <input id="descripcion_maquina" type="text" class="validate">
+        <label for="descripcion_maquina">Descripcion</label>
+      </div>
+      <div class="input-field col m6 s12">
+        <input id="cantidad_maquina" type="text" class="validate" onkeyup="calcularImporteMaquina()">
+        <label for="cantidad_maquina">Cantidad</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field col m6 s12">
+        <input id="unidad_maquina" type="text" class="validate">
+        <label for="unidad_maquina">Unidad</label>
+      </div>
+      <div class="input-field col m6 s12">
+        <input id="costo_maquina" type="text" class="validate" onkeyup="calcularImporteMaquina()">
+        <label for="costo_maquina">Costo</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field col s12">
+        <input id="importe_maquina" type="text" class="validate">
+        <label for="importe_maquina">Importe</label>
+      </div>
+    </div>
+    <div class="row right-align">
+      <div class="col s12"> 
+        <div class="col s10">
+          <a href="#!" class="cancel-btn" onclick="$('#maquina-form').hide();$('#nueva-maquina').show();">Cancelar</a>
+        </div>
+        <div class="col s2">
+          <button id="enviardatamaquina" class="btn waves-effect waves-light light-blue white-text" type="submit" name="action" onclick="enviarDatosMaquina()">Guardar</button>
+          <button id="editardatamaquina" class="btn waves-effect waves-light light-blue white-text" type="submit" name="action" onclick="editarDatosMaquina()">Editar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row" style="overflow-x:auto;">
+  <div class="col s12">
+    <p class="table-title light-blue-text" style="font-weight:bold;">Maquinaria</p>
+   <!-- //Tabla con los condominios-->
+    <table class="striped">
+      <thead>
+        <th>Codigo</th>
+        <th>Descripcion</th>
+        <th>Cantidad</th>
+        <th>Unidad</th>
+        <th>Costo</th>
+        <th>Importe</th>
+        <th></th>
+        <th></th>
+      </thead>
+      <tbody id="maquina-rows">
+      </tbody>
+    </table>
+    <p class="light-blue-text" id="subtotal_maquina"></p>
+  </div>
+</div>

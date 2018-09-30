@@ -1,0 +1,71 @@
+<script src="js/herramientas.js"></script>
+<div class="row">
+  <div class="col s12 right-align">
+    <a id="nueva-herramienta" class="circle-btn waves-effect waves-light btn-small light-blue white-text" onclick="$('#herramienta-form').show();$(this).hide();$('input').val('');$('#enviardataherramienta').show();$('#editardataherramienta').hide()" style="margin-bottom: -10px;margin-top: -35px;"><i class="material-icons left">add_circle_outline</i>Agregar herramienta</a>
+  </div>
+</div>
+
+<div class="row z-depth-2" id="herramienta-form">
+  <div class="col s12">
+    <!--Formulario-->
+    <div class="row">
+       <div class="input-field col m6 s12">
+        <input id="descripcion_herramienta" type="text" class="validate">
+        <label for="descripcion_herramienta">Descripcion</label>
+      </div>
+      <div class="input-field col m6 s12">
+        <input id="cantidad_herramienta" type="text" class="validate" onkeyup="calcularImporteHerramienta()">
+        <label for="cantidad_herramienta">Cantidad</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field col m6 s12">
+        <input id="unidad_herramienta" type="text" class="validate">
+        <label for="unidad_herramienta">Unidad</label>
+      </div>
+      <div class="input-field col m6 s12">
+        <input id="costo_herramienta" type="text" class="validate" onkeyup="calcularImporteHerramienta()">
+        <label for="costo_herramienta">Costo</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field col s12">
+        <input id="importe_herramienta" type="text" class="validate">
+        <label for="importe_herramienta">Importe</label>
+      </div>
+    </div>
+    <div class="row right-align">
+      <div class="col s12"> 
+        <div class="col s10">
+          <a href="#!" class="cancel-btn" onclick="$('#herramienta-form').hide();$('#nueva-herramienta').show();">Cancelar</a>
+        </div>
+        <div class="col s2">
+          <button id="enviardataherramienta" class="btn waves-effect waves-light light-blue white-text" type="submit" name="action" onclick="enviarDatosHerramienta()">Guardar</button>
+          <button id="editardataherramienta" class="btn waves-effect waves-light light-blue white-text" type="submit" name="action" onclick="editarDatosHerramienta()">Editar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row" style="overflow-x:auto;">
+  <div class="col s12">
+    <p class="table-title light-blue-text" style="font-weight:bold;">Equipo y herramienta</p>
+   <!-- //Tabla con los condominios-->
+    <table class="striped">
+      <thead>
+        <th>Codigo</th>
+        <th>Descripcion</th>
+        <th>Cantidad</th>
+        <th>Unidad</th>
+        <th>Costo</th>
+        <th>Importe</th>
+        <th></th>
+        <th></th>
+      </thead>
+      <tbody id="herramienta-rows">
+      </tbody>
+    </table>
+    <p class="light-blue-text" id="subtotal_herramienta"></p>
+  </div>
+</div>

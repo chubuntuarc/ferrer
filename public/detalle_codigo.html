@@ -1,0 +1,56 @@
+<script src="js/detalle_codigo.js"></script>
+
+<div class="row light-blue white-text" id="module-title">
+  <div class="col s12 center-align">
+    <h5>Detalle de código</h5>
+    <div class="row">
+      <div class="col m3 s6" id="codigo"></div>
+      <div class="col m6 hide-on-small-only" id="descripcion_codigo" style="font-size: 10px;"></div>
+      <div class="col m3 s6" id="cantidad_codigo"></div>
+    </div>
+    <div class="row">
+      <div class="col s4" id="subtotal"></div>
+    <div class="col s4" id="iva"></div>
+    <div class="col s4" id="total"></div>
+    </div>
+  </div>
+</div>
+
+<a href="#!" onclick="goback()" style="position: absolute;margin-top: -10px;"><i class="medium material-icons">chevron_left</i></a>
+
+<input type="hidden" id="cantidad_codigo_master">
+<input type="hidden" id="indirectos">
+<input type="hidden" id="utilidad">
+
+<!--Materiales-->
+<div class="row">
+  <div id="materiales"></div>
+</div>
+
+<!--Mano de obra-->
+<div class="row">
+  <div id="mano_obra"></div>
+</div>
+
+<!--Herramientas-->
+<div class="row">
+  <div id="herramientas"></div>
+</div>
+
+<!--Maquinas-->
+<div class="row">
+  <div id="maquina"></div>
+</div>
+
+<div class="row">
+  <p class="light-blue-text" id="subtotal_codigo" style="text-align: right;margin-right: 20px;font-size: 16px;"></p>
+  <p class="light-blue-text" id="indirectos_codigo" style="text-align: right;margin-right: 20px;font-size: 16px;margin-top: -15px;"></p>
+  <p class="light-blue-text" id="utilidad_codigo" style="text-align: right;margin-right: 20px;font-size: 16px;margin-top: -15px;"></p>
+  <p class="light-blue-text" id="total_codigo" style="text-align: right;margin-right: 20px;font-size: 24px;margin-top: -15px;font-weight: bold;"></p>
+</div>
+
+<script>
+$(document).ready(function(){
+  $('select').formSelect();
+}) 
+</script>

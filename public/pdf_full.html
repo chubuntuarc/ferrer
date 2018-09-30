@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+      <!--Import Google Icon Font-->
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+      <!--Let browser know website is optimized for mobile-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/5.5.0/firebase.js"></script>
+      <script src="js/firebase.js"></script>
+      <script src="js/pdf_full.js"></script>
+    </head>
+    
+    <style>
+      .salto_pagina_despues{
+        page-break-after:always;
+        }
+
+        .salto_pagina_anterior{
+        page-break-before:always;
+        }
+    </style>
+    
+    <input type="hidden" id="indirectos">
+    <input type="hidden" id="utilidad">
+    
+    <!--Notas-->
+    <!--Head-->
+    <div class="salto_pagina_despues" id="notas">
+      <div id="notas"></div>
+    </div>
+    
+    <!--Detalles presupuesto-->
+    <div id="detalles">
+       <div class="row">
+        <div class="col s6">
+          <img src="images/logo.png" alt="" style="margin-top: 10px;height: 58px;">
+        </div>
+        <div class="col s6 right-align">
+          <p style="font-weight: bold;font-size: 11px;margin-bottom: -16px;text-align:center;">J-Ferrer Tecnología Diseño y Construccion</p>
+          <p style="font-weight: bold;font-size: 11px;margin-bottom: -16px;text-align:center;">S.A de C.V JTD131226964 H. Colegio Militar</p>
+          <p style="font-weight: bold;font-size: 11px;margin-bottom: -16px;text-align:center;">#47 int 3 Col. Cumbres de Llano Largo</p>
+          <p style="font-weight: bold;font-size: 11px;margin-bottom: -16px;text-align:center;">Acapulco, Gro.</p>
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col s9" style="border: 1px solid;height: 60px;">
+          <p class="descripcion_proyecto" style="font-size: 10px;font-weight: bold;"></p>
+        </div>
+        <div class="col s3" style="border: 1px solid;height: 60px;text-align:center;">
+          <div class="row" style="margin-bottom:0px;margin-top: -5px;">
+            <p style="font-size: 10px;font-weight: bold;margin-bottom: -14px;">PROCEDIMIENTO</p>
+          </div>
+          <div class="row" style="margin-bottom:0px;">
+            <p class="procedimiento_proyecto" style="font-size: 10px;font-weight: bold;margin-bottom: -14px;"></p>
+          </div>
+          <div class="row"style="margin-bottom:0px;">
+            <p style="font-size: 10px;font-weight: bold;margin-bottom: -14px;">FECHA</p>
+          </div>
+          <div class="row" style="margin-bottom:0px;">
+            <p class="fecha_proyecto" style="font-size: 10px;font-weight: bold;margin-bottom: -14px;"></p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="row" style="margin-top: -18px;">
+        <div class="col s2" style="border:1px solid;height: 40px;">
+          <p style="font-size:10px;font-weight:bold;text-align:center;">UBICACION</p>
+        </div>
+        <div class="col s10" style="border:1px solid;height: 40px;">
+          <p class="ubicacion_proyecto" style="font-size:10px;font-weight:bold;text-align:center;margin-top: 4px;"></p>
+        </div>
+      </div>
+      <div class="row" style="overflow-x:auto;">
+        <div class="col s12">
+         <!-- //Tabla con los condominios-->
+          <table class="striped">
+            <thead>
+              <th>Codigo</th>
+              <th>Descripcion</th>
+              <th>Cantidad</th>
+              <th>Unidad</th>
+              <th>PU</th>
+              <th>Importe</th>
+            </thead>
+            <tbody id="codigos-rows">
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    
+    <!--Codigos-->
+    <div id="lista_codigos"></div>
+    
+    
+    <!--Firma-->
+  <div class="row">
+  <div class="col s5 offset-s1">
+    <p style="font-size: 10px;font-weight: bold;margin-bottom: -10px;">EMPRESA</p>
+    <p style="font-size: 10px;font-weight: bold;margin-bottom: 24px;">J-Ferrer Tecnología Diseño y Construccion</p>
+    <hr>
+    <p style="font-size: 10px;font-weight: bold;margin-bottom: -10px;">NOMBRE Y FIRMA DEL REPRESENTANTE LEGAL</p>
+    <p style="font-size: 10px;font-weight: bold;margin-bottom: 24px;">Julio Alfredo Ferrer Salado</p>
+    <hr>
+  </div>
+  <div class="col s4 offset-s1">
+  <p style="font-size: 10px;font-weight: bold;margin-bottom: -10px;text-align: right;" id="subtotal_proyecto"></p>
+  <p style="font-size: 10px;font-weight: bold;margin-bottom: -10px;text-align: right;" id="iva_proyecto"></p>
+  <p style="font-size: 10px;font-weight: bold;margin-bottom: -10px;text-align: right;" id="total_proyecto"></p>
+  </div>
+</div>
+    
+    
+     <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+            
+    </body>
+  </html>
