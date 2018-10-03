@@ -106,6 +106,7 @@ function leerDatos(){
           $("#presupuestos-rows").append(nuevaFila)
     }
     $('.loader-back').hide()
+    datatable()
   })
 }
 

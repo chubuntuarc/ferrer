@@ -83,7 +83,7 @@ function leerDatos(){
     for(var key in datos){
       var nuevaFila='<tr>'
           nuevaFila+='<td>'+datos[key].codigo+'</td>'
-          nuevaFila+='<td>'+datos[key].descripcion+'</td>'
+          nuevaFila+='<td style="width: 100%;font-size: 10px;">'+datos[key].descripcion+'</td>'
           nuevaFila+='<td>'+datos[key].cantidad+'</td>'
           nuevaFila+='<td>'+datos[key].unidad+'</td>'
           nuevaFila+='<td>$'+number_format(datos[key].pu,2)+'</td>'
@@ -95,6 +95,7 @@ function leerDatos(){
           $("#codigos-rows").append(nuevaFila)
     }
     $('.loader-back').hide()
+    datatable()
   })
 }
 
