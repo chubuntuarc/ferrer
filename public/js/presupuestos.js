@@ -1,4 +1,5 @@
 $(document).ready(function(){
+  $('.loader-back').show()
   inicializar()
   leerDatos()
   $('#module-form').hide()
@@ -104,6 +105,7 @@ function leerDatos(){
           nuevaFila+='</tr>'
           $("#presupuestos-rows").append(nuevaFila)
     }
+    $('.loader-back').hide()
   })
 }
 

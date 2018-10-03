@@ -2,6 +2,7 @@ var key = $('#hiddenkey').val()
 var masterkey = $('#hiddenmasterkey').val()
 
 $(document).ready(function(){
+  $('.loader-back').show()
   inicializar()
   //leerDatos()
   $( '#materiales' ).load( 'materiales.html' );

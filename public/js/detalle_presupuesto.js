@@ -2,6 +2,7 @@ var key = $('#hiddenkey').val()
 var masterkey = $('#hiddenkey').val()
 
 $(document).ready(function(){
+  $('.loader-back').show()
   inicializar()
   leerDatos()
   $('#module-form').hide()
@@ -93,6 +94,7 @@ function leerDatos(){
           nuevaFila+='</tr>'
           $("#codigos-rows").append(nuevaFila)
     }
+    $('.loader-back').hide()
   })
 }
 

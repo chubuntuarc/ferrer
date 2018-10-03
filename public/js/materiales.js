@@ -91,6 +91,7 @@ function leerDatosMateriales(){
       sub += parseFloat(datos[key].importe)
     }
     $('#subtotal_materiales').text('Subtotal : $' + number_format(sub,2))
+    $('.loader-back').hide()
   })
 }
 
