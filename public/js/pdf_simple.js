@@ -12,6 +12,7 @@ $.urlParam = function(name){
 var key = $.urlParam('k')
 
 $(document).ready(function(){
+  $('.loader-back').show()
   $('#notas').load('pdf/notas.html')
   inicializar()
   datosHead()
@@ -59,7 +60,7 @@ detalle_presupuesto.on('value',function(snap){
   })
 }
 
-setTimeout(function() { window.print(); }, 5000);
+setTimeout(function() { $('.loader-back').hide();window.print(); }, 5000);
 
 var mediaQueryList = window.matchMedia('print');
 mediaQueryList.addListener(function(mql) {

@@ -1,34 +1,52 @@
 var key = $('#hiddenkey').val()
 var masterkey = $('#hiddenkey').val()
-
+  
 $(document).ready(function(){
+  //Master keys
+  
   $('.loader-back').show()
   inicializar()
-  leerDatos()
   $('#module-form').hide()
-  $('#editardata').hide()
+  $('#editar_codigo').hide()
 })
 
-var formulario
 var presupuestos
-var submit = $('#enviardata').text()
 var elementoEditar
 
 function inicializar(){
+  //Objetos a inicializar
   detalle_presupuesto = firebase.database().ref().child('detalle_presupuestos').child(key)
   presupuesto = firebase.database().ref().child('presupuestos').child(key)
   presupuesto.once('value').then(function(snapshot) {
   $('#procedimiento').text((snapshot.val() && snapshot.val().procedimiento) || 'N/A')
-    var subtotal = number_format((snapshot.val() && snapshot.val().subtotal) || '$0.00', 2)
-    var iva = number_format((snapshot.val() && snapshot.val().iva) || '$0.00', 2)
-    var total = number_format((snapshot.val() && snapshot.val().total) || '$0.00', 2)
-  $('#subtotal').text('Subtotal: ' + '$'+subtotal)
-  $('#iva').text('IVA: ' + '$'+iva)
-  $('#total').text('Total: ' + '$'+total)
-})
+      var subtotal = number_format((snapshot.val() && snapshot.val().subtotal) || '$0.00', 2)
+      var iva = number_format((snapshot.val() && snapshot.val().iva) || '$0.00', 2)
+      var total = number_format((snapshot.val() && snapshot.val().total) || '$0.00', 2)
+    $('#subtotal').text('Subtotal: ' + '$'+subtotal)
+    $('#iva').text('IVA: ' + '$'+iva)
+    $('#total').text('Total: ' + '$'+total)
+  })
+  //Leer los codigos del presupuesto
+  listaCodigos()
 }
 
-function enviarDatos(){
+//Boton para agregar codigo al detalle de presupuesto
+function agregarCodigo(){
+  $('#module-form').show()
+  $('#nuevo-codigo').hide()
+  $('input.validate').val('')
+  $('#guardar_codigo').show()
+  $('#editar_codigo').hide()
+}
+
+//Boton cancelar en formulario de registro
+function cancelarCodigo(){
+  $('#module-form').hide()
+  $('#nuevo-codigo').show()
+}
+
+//Registrar un nuevo codigo del presupuesto
+function guardarCodigo(){
   var codigo = $('#codigo').val()
   var descripcion = $('#descripcion').val()
   var cantidad = $('#cantidad').val()
@@ -42,14 +60,16 @@ function enviarDatos(){
     unidad : unidad,
     pu : pu,
     importe : importe
-  })  
-  $('#module-form').hide()
-  $('#nuevo-codigo').show()
-  M.toast({html: 'Guardado!', classes: 'rounded'});
-  leerDatos()
+  }).then((snap) => {
+    $('#module-form').hide()
+    $('#nuevo-codigo').show()
+    M.toast({html: 'Guardado!', classes: 'rounded'});
+    //listaCodigos()
+  })
 }
 
-function editarDatos(){
+//Actualizar datos de un codigo del detalle de presupuesto
+function actualizarCodigo(){
   var codigo = $('#codigo').val()
   var descripcion = $('#descripcion').val()
   var cantidad = $('#cantidad').val()
@@ -57,7 +77,6 @@ function editarDatos(){
   var pu = $('#pu').val()
   var importe = $('#importe').val()
   if(isNaN(importe)){ importe = 0 }
-  console.log(importe)
   elementoEditar.update({
     codigo: codigo,
     descripcion: descripcion,
@@ -65,18 +84,19 @@ function editarDatos(){
     unidad : unidad,
     pu : pu,
     importe : importe
-    })
-  $('#module-form').hide()
-  $('#nuevo-codigo').show()
-  M.toast({html: 'Actualizado!', classes: 'rounded'});
-  leerDatos()
-  $('input').val('')
-  $('#enviardata').show()
-  $('#editardata').hide()
+  }).then((snap) => {
+    $('#module-form').hide()
+    $('#nuevo-codigo').show()
+    $('input.validate').val('')
+    $('#guardar_codigo').show()
+    $('#editar_codigo').hide()
+    M.toast({html: 'Actualizado!', classes: 'rounded'});
+    //listaCodigos()
+  })
 }
 
-function leerDatos(){
-  actualizarSubtotal()
+//Listado de codigos en el detalle del presupuesto
+function listaCodigos(){
   detalle_presupuesto.on('value',function(snap){
     $("#codigos-rows > tr").remove()
     var datos = snap.val()
@@ -88,29 +108,31 @@ function leerDatos(){
           nuevaFila+='<td>'+datos[key].unidad+'</td>'
           nuevaFila+='<td>$'+number_format(datos[key].pu,2)+'</td>'
           nuevaFila+='<td>$'+number_format(datos[key].importe,2)+'</td>'
-          nuevaFila+='<td><a href="#!" onclick="editar(\''+key+'\');"><i class="material-icons">edit</i></a></td>'
+          nuevaFila+='<td><a href="#!" onclick="editarCodigo(\''+key+'\');"><i class="material-icons">edit</i></a></td>'
           nuevaFila+='<td><a href="#!" onclick="$( \'#work-place\' ).load( \'detalle_codigo.html\');$(\'#hiddenkey\').val(\''+key+'\');$(\'#hiddenmasterkey\').val(\''+masterkey+'\');"><i class="material-icons green-text">attach_money</i></a></td>'
-          nuevaFila+='<td><a href="#!" onclick="borrar(\''+key+'\');"><i class="material-icons red-text">delete</i></a></td>'
+          nuevaFila+='<td><a href="#!" onclick="borrarCodigo(\''+key+'\');"><i class="material-icons red-text">delete</i></a></td>'
           nuevaFila+='</tr>'
           $("#codigos-rows").append(nuevaFila)
     }
     $('.loader-back').hide()
     datatable()
+    actualizarSubtotalEnCodigos()
   })
 }
 
-function borrar(key){
+//Eliminar un codigo del detalle
+function borrarCodigo(key){
   var checkstr =  confirm('Deseas eliminar el codigo?');
     if(checkstr === true){
       var elementoABorrar = detalle_presupuesto.child(key)
-      elementoABorrar.remove()
-      leerDatos()
+      elementoABorrar.remove().then((snap) => { listaCodigos() })
     }else{
     return false;
     }
 }
 
-function editar(key){
+//Mandar a editar un codigo desde el listado
+function editarCodigo(key){
   $('#module-form').show()
   $('#nuevo-codigo').hide()
   var elementoAEditar = detalle_presupuesto.child(key)
@@ -124,13 +146,14 @@ function editar(key){
     $('#pu').val(datos.pu)
     $('#importe').val(datos.importe)
   })
-  $('#enviardata').hide()
-  $('#editardata').show()
+  $('#guardar_codigo').hide()
+  $('#editar_codigo').show()
   M.updateTextFields()
   $('select').formSelect()
 }
 
-function actualizarSubtotal(){
+//Actualizar el subtotal del proyecto desde la pantalla de detalle de presupuesto
+function actualizarSubtotalEnCodigos(){
   var subtotal = 0
   detalle_presupuesto.on('value',function(snap){
     var datos = snap.val()

@@ -1,22 +1,37 @@
 $(document).ready(function(){
   $('.loader-back').show()
   inicializar()
-  leerDatos()
   $('#module-form').hide()
-  $('#editardata').hide()
+  $('#editar_presupuesto').hide()
   $('select').formSelect()
 })
 
-var formulario
 var presupuestos
-var submit = $('#enviardata').text()
 var elementoEditar
 
+//Inicializar objeto principal
 function inicializar(){
   presupuestos = firebase.database().ref().child('presupuestos')
+  listaPresupuestos()
 }
 
-function enviarDatos(){
+//Boton agregar presupuesto
+function agregarPresupuesto(){
+  $('#module-form').show()
+  $('#nuevo-presupuesto').hide()
+  $('input.validate').val('')
+  $('#guardar_presupuesto').show()
+  $('#editar_presupuesto').hide()
+}
+
+//Boton cancelar en formulario
+function cancelarPresupuesto(){
+  $('#module-form').hide()
+  $('#nuevo-presupuesto').show()
+}
+
+//Registrar presupuesto
+function guardarPresupuesto(){
   var descripcion = $('#descripcion').val()
   var procedimiento = $('#procedimiento').val()
   var fecha = $('#fecha').val()
@@ -42,14 +57,16 @@ function enviarDatos(){
     indirectos : indirectos,
     utilidad : utilidad,
     comment : comment
-  })  
-  $('#module-form').hide()
-  $('#nuevo-presupuesto').show()
-  M.toast({html: 'Guardado!', classes: 'rounded'});
-  leerDatos()
+  }).then((snap) => {
+     $('#module-form').hide()
+     $('#nuevo-presupuesto').show()
+     M.toast({html: 'Guardado!', classes: 'rounded'});
+     listaPresupuestos()
+  }) 
 }
 
-function editarDatos(){
+//Actualizar los datos del presupuesto
+function actualizarPresupuesto(){
   var descripcion = $('#descripcion').val()
   var procedimiento = $('#procedimiento').val()
   var fecha = $('#fecha').val()
@@ -75,17 +92,19 @@ function editarDatos(){
     indirectos : indirectos,
     utilidad : utilidad,
     comment : comment
-    })
-  $('#module-form').hide()
-  $('#nuevo-presupuesto').show()
-  M.toast({html: 'Actualizado!', classes: 'rounded'});
-  leerDatos()
-  $('input').val('')
-  $('#enviardata').show()
-  $('#editardata').hide()
+  }).then((snap) => {
+    $('#module-form').hide()
+    $('#nuevo-presupuesto').show()
+    $('input.validate').val('')
+    $('#guardar_presupuesto').show()
+    $('#editar_presupuesto').hide()
+    M.toast({html: 'Actualizado!', classes: 'rounded'})
+    listaPresupuestos()
+  }) 
 }
 
-function leerDatos(){
+//Listado de los presupuestos creados
+function listaPresupuestos(){
   presupuestos.on('value',function(snap){
     $("#presupuestos-rows > tr").remove()
     var datos = snap.val()
@@ -98,10 +117,10 @@ function leerDatos(){
           nuevaFila+='<td>$'+number_format(datos[key].subtotal,2)+'</td>'
           nuevaFila+='<td>$'+number_format(datos[key].iva,2)+'</td>'
           nuevaFila+='<td>$'+number_format(datos[key].total,2)+'</td>'
-          nuevaFila+='<td><a href="#!" onclick="editar(\''+key+'\');"><i class="material-icons">edit</i></a></td>'
-          //nuevaFila+='<td><a href="#!" onclick="$( \'#work-place\' ).load( \'detalle_presupuesto.html\',{k:\''+key+'\'});"><i class="material-icons green-text">attach_money</i></a></td>'
+          nuevaFila+='<td><a href="#!" onclick="editarPresupuesto(\''+key+'\');"><i class="material-icons">edit</i></a></td>'
           nuevaFila+='<td><a href="#!" onclick="$( \'#work-place\' ).load( \'detalle_presupuesto.html\');$(\'#hiddenkey\').val(\''+key+'\')"><i class="material-icons green-text">attach_money</i></a></td>'
-          nuevaFila+='<td><a href="#!" onclick="borrar(\''+key+'\');"><i class="material-icons red-text">delete</i></a></td>'
+          nuevaFila+='<td><a href="#!" onclick="clonarPresupuesto(\''+key+'\');"><i class="material-icons orange-text">content_copy</i></a></td>'
+          nuevaFila+='<td><a href="#!" onclick="borrarPresupuesto(\''+key+'\');"><i class="material-icons red-text">delete</i></a></td>'
           nuevaFila+='</tr>'
           $("#presupuestos-rows").append(nuevaFila)
     }
@@ -110,18 +129,8 @@ function leerDatos(){
   })
 }
 
-function borrar(key){
-  var checkstr =  confirm('Deseas eliminar el presupuesto?');
-    if(checkstr === true){
-      var elementoABorrar = presupuestos.child(key)
-      elementoABorrar.remove()
-      leerDatos()
-    }else{
-    return false;
-    }
-}
-
-function editar(key){
+//Llamar a edicion desde el listado
+function editarPresupuesto(key){
   $('#module-form').show()
   $('#nuevo-presupuesto').hide()
   var elementoAEditar = presupuestos.child(key)
@@ -143,9 +152,53 @@ function editar(key){
     M.updateTextFields()
     $('select').formSelect()
   })
-  $('#enviardata').hide()
-  $('#editardata').show()
+  $('#guardar_presupuesto').hide()
+  $('#editar_presupuesto').show()
 }
+
+function borrarPresupuesto(key){
+  var checkstr =  confirm('Deseas eliminar el presupuesto?');
+    if(checkstr === true){
+      var elementoABorrar = presupuestos.child(key)
+      elementoABorrar.remove().then((snap) => { listaPresupuestos() })
+    }else{
+    return false;
+    }
+}
+
+//Master key for clone
+var mkey
+
+//Clonar presupuesto
+function clonarPresupuesto(key){
+  mkey = key
+  presupuesto_clonar = firebase.database().ref().child('presupuestos').child(key)
+  presupuestos_clonar = firebase.database().ref().child('presupuestos')
+  presupuesto_clonar.on('value',function(snap){
+    presupuestos_clonar.push(snap.val()).then((snap) => {
+     const key = snap.key 
+     clonarDetallePresupuesto(key)
+  }) 
+  })
+}
+
+function clonarDetallePresupuesto(key){
+  $('.loader-back').show()
+  detalle_presupuesto_clonar = firebase.database().ref().child('detalle_presupuestos').child(mkey)
+  detalle_presupuesto_nuevo_clonar = firebase.database().ref().child('detalle_presupuestos').child(key)
+  detalle_presupuesto_clonar.on('value',function(snap){
+    var datos = snap.val()
+    for(var k in datos){
+      clonarDEtalleCodigo(k)
+      detalle_presupuesto_nuevo_clonar.push(datos[k])
+    }
+  })
+}
+
+function clonarDEtalleCodigo(k){
+ setTimeout(function() { location.reload(); }, 5000) 
+}
+//FIN del clonado
 
  //Convertir a moneda
 function number_format(amount, decimals) {
