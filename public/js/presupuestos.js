@@ -110,7 +110,7 @@ function listaPresupuestos(){
       var nuevaFila='<tr>'
           nuevaFila+='<td>'+datos[key].procedimiento+'</td>'
           nuevaFila+='<td class="hide-on-small-only">'+datos[key].fecha+'</td>'
-          nuevaFila+='<td class="hide-on-small-only">'+datos[key].ubicacion+'</td>'
+          nuevaFila+='<td class="hide-on-small-only" style="font-size: 10px;">'+datos[key].descripcion+'</td>'
           nuevaFila+='<td class="hide-on-small-only">'+datos[key].duracion+'</td>'
           nuevaFila+='<td class="hide-on-small-only">$'+number_format(datos[key].subtotal,2)+'</td>'
           nuevaFila+='<td class="hide-on-small-only">$'+number_format(datos[key].iva,2)+'</td>'
