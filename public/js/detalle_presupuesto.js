@@ -102,13 +102,13 @@ function listaCodigos(){
       var nuevaFila='<tr>'
           nuevaFila+='<td>'+datos[key].codigo+'</td>'
           nuevaFila+='<td style="width: 100%;font-size: 10px;">'+datos[key].descripcion+'</td>'
-          nuevaFila+='<td>'+datos[key].cantidad+'</td>'
-          nuevaFila+='<td>'+datos[key].unidad+'</td>'
-          nuevaFila+='<td>$'+number_format(datos[key].pu,2)+'</td>'
+          nuevaFila+='<td class="hide-on-small-only">'+datos[key].cantidad+'</td>'
+          nuevaFila+='<td class="hide-on-small-only">'+datos[key].unidad+'</td>'
+          nuevaFila+='<td class="hide-on-small-only">$'+number_format(datos[key].pu,2)+'</td>'
           nuevaFila+='<td>$'+number_format(datos[key].importe,2)+'</td>'
-          nuevaFila+='<td><a href="#!" onclick="editarCodigo(\''+key+'\');"><i class="material-icons">edit</i></a></td>'
+          nuevaFila+='<td class="hide-on-small-only"><a href="#!" onclick="editarCodigo(\''+key+'\');"><i class="material-icons">edit</i></a></td>'
           nuevaFila+='<td><a href="#!" onclick="$( \'#work-place\' ).load( \'detalle_codigo.html\');$(\'#hiddenkey\').val(\''+key+'\');$(\'#hiddenmasterkey\').val(\''+masterkey+'\');"><i class="material-icons green-text">attach_money</i></a></td>'
-          nuevaFila+='<td><a href="#!" onclick="borrarCodigo(\''+key+'\');"><i class="material-icons red-text">delete</i></a></td>'
+          nuevaFila+='<td class="hide-on-small-only"><a href="#!" onclick="borrarCodigo(\''+key+'\');"><i class="material-icons red-text">delete</i></a></td>'
           nuevaFila+='</tr>'
           $("#codigos-rows").append(nuevaFila)
     }

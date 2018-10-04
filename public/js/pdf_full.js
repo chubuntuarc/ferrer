@@ -12,9 +12,10 @@ $.urlParam = function(name){
 var key = $.urlParam('k')
 
 $(document).ready(function(){
-  $('#notas').load('pdf/notas.html')
-  inicializar()
-  datosHead()
+  $('.loader-back').show();
+  $('#notas').load('pdf/notas.html');
+  inicializar();
+  datosHead();
 })
 
 function inicializar(){
@@ -69,6 +70,7 @@ detalle_presupuesto.on('value',function(snap){
     }
   
     var keys = Object.keys(datos)
+    var importes
     for(var i = 0;i <= keys.length;i++){
       detalle_codigo = firebase.database().ref().child('detalle_codigo').child(keys[i])
       //Head
@@ -178,126 +180,128 @@ detalle_presupuesto.on('value',function(snap){
             var sub3 = 'utilidad_codigo'+keys[i]
             var sub4 = 'total_codigo'+keys[i]
             nuevoCodigo += '<div class="row">'
-            nuevoCodigo += '<p class="light-blue-text" id="'+sub+'" style="text-align: right;margin-right: 20px;font-size: 16px;"></p>'
-            nuevoCodigo += '<p class="light-blue-text" id="'+sub2+'" style="text-align: right;margin-right: 20px;font-size: 16px;margin-top: -15px;"></p>'
-            nuevoCodigo += '<p class="light-blue-text" id="'+sub3+'" style="text-align: right;margin-right: 20px;font-size: 16px;margin-top: -15px;"></p>'
-            nuevoCodigo += '<p class="light-blue-text" id="'+sub4+'" style="text-align: right;margin-right: 20px;font-size: 12px;margin-top: -15px;font-weight: bold;"></p>'
+            nuevoCodigo += '<p class="light-blue-text" id="'+sub+'" style="text-align: right;margin-right: 20px;font-size: 12px;"></p>'
+            nuevoCodigo += '<p class="light-blue-text" id="'+sub2+'" style="text-align: right;margin-right: 20px;font-size: 12px;margin-top: -15px;"></p>'
+            nuevoCodigo += '<p class="light-blue-text" id="'+sub3+'" style="text-align: right;margin-right: 20px;font-size: 12px;margin-top: -15px;"></p>'
+            nuevoCodigo += '<p class="light-blue-text" id="'+sub4+'" style="text-align: right;margin-right: 20px;font-size: 16px;margin-top: -15px;font-weight: bold;"></p>'
             nuevoCodigo += '</div>'
       
             detalle_codigo_material = firebase.database().ref().child('detalle_codigo').child(keys[i]).child('MAT')
             detalle_codigo_material.once('value').then(function(mat) {
-             var data_mat = mat.val()
-             var arr = []
-             var count = 0
+             var data_mat = mat.val();
+             var arr = [];
+             var count = 0;
+             var nuevalinea = '';
              for(var key in data_mat){
-               arr.push(key + ',')
-               count++
-               var descripcion = data_mat[key]["descripcion"]
-               var unidad = data_mat[key]["unidad"]
-               var cantidad = data_mat[key]["cantidad"]
-               var costo = data_mat[key]["costo"]
-               var importe = data_mat[key]["importe"]
-               var nuevalinea = '<div class="row" style="font-size: 11px;margin-top: -20px;">'
-                nuevalinea += '<div class="col s1">'
-                nuevalinea += '<p>MAT-'+count+'</p>'
-                nuevalinea += '</div>'
-                nuevalinea += '<div class="col s6">'
-                nuevalinea += '<p>'+descripcion+'</p>'
-                nuevalinea += '</div>'
-                nuevalinea += '<div class="col s1" style="text-align:center;">'
-                nuevalinea += '<p>'+unidad+'</p>'
-                nuevalinea += '</div>'
-                nuevalinea += '<div class="col s1" style="text-align:center;">'
-                nuevalinea += '<p>'+cantidad+'</p>'
-                nuevalinea += '</div>'
-                nuevalinea += '<div class="col s1" style="text-align:center;">'
-                nuevalinea += '<p>$'+number_format(costo,2)+'</p>'
-                nuevalinea += '</div>'
-                nuevalinea += '<div class="col s2" style="text-align:center;">'
-                nuevalinea += '<p>$'+number_format(importe,2)+'</p>'
-                nuevalinea += '</div>'
-                nuevalinea += '</div>'
-               var divx = 'material'+mat.ref.parent.key
-               $('#'+divx).append(nuevalinea)
+               arr.push(key + ',');
+               count++;
+               var descripcion = data_mat[key]["descripcion"];
+               var unidad = data_mat[key]["unidad"];
+               var cantidad = data_mat[key]["cantidad"];
+               var costo = data_mat[key]["costo"];
+               var importe = data_mat[key]["importe"];
+                nuevalinea += '<div class="row" style="font-size: 11px;margin-top: -20px;">';
+                nuevalinea += '<div class="col s1">';
+                nuevalinea += '<p>MAT-'+count+'</p>';
+                nuevalinea += '</div>';
+                nuevalinea += '<div class="col s6">';
+                nuevalinea += '<p>'+descripcion+'</p>';
+                nuevalinea += '</div>';
+                nuevalinea += '<div class="col s1" style="text-align:center;">';
+                nuevalinea += '<p>'+unidad+'</p>';
+                nuevalinea += '</div>';
+                nuevalinea += '<div class="col s1" style="text-align:center;">';
+                nuevalinea += '<p>'+cantidad+'</p>';
+                nuevalinea += '</div>';
+                nuevalinea += '<div class="col s1" style="text-align:center;">';
+                nuevalinea += '<p>$'+number_format(costo,2)+'</p>';
+                nuevalinea += '</div>';
+                nuevalinea += '<div class="col s2" style="text-align:center;">';
+                nuevalinea += '<input type="hidden" class="import_value" value="'+importe+'"/>'; //Importe del elemento
+                nuevalinea += '<p>$'+number_format(importe,2)+'</p>';
+                nuevalinea += '</div>';
+                nuevalinea += '</div>';
              }
-                $('#subtotal_materiales'+key).val(arr)
+                var divx = 'material'+mat.ref.parent.key;
+                $('#'+divx).append(nuevalinea);
+                $('#subtotal_materiales'+key).val(arr);
            })
-      
-      
-            
+           
       //Datos de mano de obra
                detalle_codigo_material = firebase.database().ref().child('detalle_codigo').child(keys[i]).child('MO')
            detalle_codigo_material.once('value').then(function(mat) {
-             var data_mat = mat.val()
-             var count = 0
+             var data_mat = mat.val();
+             var count = 0;
+             var nuevalinea = '';
              for(var key in data_mat){
-               count++
-               var descripcion = data_mat[key]["descripcion"]
-               var unidad = data_mat[key]["unidad"]
-               var cantidad = data_mat[key]["cantidad"]
-               var costo = data_mat[key]["costo"]
-               var importe = data_mat[key]["importe"]
-               var nuevalinea = '<div class="row" style="font-size: 11px;margin-top: -20px;">'
-                nuevalinea += '<div class="col s1">'
-                nuevalinea += '<p>MO-'+count+'</p>'
-                nuevalinea += '</div>'
-                nuevalinea += '<div class="col s6">'
-                nuevalinea += '<p>'+descripcion+'</p>'
-                nuevalinea += '</div>'
-                nuevalinea += '<div class="col s1" style="text-align:center;">'
-                nuevalinea += '<p>'+unidad+'</p>'
-                nuevalinea += '</div>'
-                nuevalinea += '<div class="col s1" style="text-align:center;">'
-                nuevalinea += '<p>'+cantidad+'</p>'
-                nuevalinea += '</div>'
-                nuevalinea += '<div class="col s1" style="text-align:center;">'
-                nuevalinea += '<p>$'+number_format(costo,2)+'</p>'
-                nuevalinea += '</div>'
-                nuevalinea += '<div class="col s2" style="text-align:center;">'
-                nuevalinea += '<p>$'+number_format(importe,2)+'</p>'
-                nuevalinea += '</div>'
-                nuevalinea += '</div>'
-               var divx = 'mano'+mat.ref.parent.key
-               $('#'+divx).append(nuevalinea)
+               count++;
+               var descripcion = data_mat[key]["descripcion"];
+               var unidad = data_mat[key]["unidad"];
+               var cantidad = data_mat[key]["cantidad"];
+               var costo = data_mat[key]["costo"];
+               var importe = data_mat[key]["importe"];
+                nuevalinea += '<div class="row" style="font-size: 11px;margin-top: -20px;">';
+                nuevalinea += '<div class="col s1">';
+                nuevalinea += '<p>MO-'+count+'</p>';
+                nuevalinea += '</div>';
+                nuevalinea += '<div class="col s6">';
+                nuevalinea += '<p>'+descripcion+'</p>';
+                nuevalinea += '</div>';
+                nuevalinea += '<div class="col s1" style="text-align:center;">';
+                nuevalinea += '<p>'+unidad+'</p>';
+                nuevalinea += '</div>';
+                nuevalinea += '<div class="col s1" style="text-align:center;">';
+                nuevalinea += '<p>'+cantidad+'</p>';
+                nuevalinea += '</div>';
+                nuevalinea += '<div class="col s1" style="text-align:center;">';
+                nuevalinea += '<p>$'+number_format(costo,2)+'</p>';
+                nuevalinea += '</div>';
+                nuevalinea += '<div class="col s2" style="text-align:center;">';
+                nuevalinea += '<p>$'+number_format(importe,2)+'</p>';
+                nuevalinea += '</div>';
+                nuevalinea += '</div>';
                 }
+                var divx = 'mano'+mat.ref.parent.key;
+                $('#'+divx).append(nuevalinea);
               })
                //Mano de obra fin
       
          //Datos de herramienta
                detalle_codigo_material = firebase.database().ref().child('detalle_codigo').child(keys[i]).child('HER')
            detalle_codigo_material.once('value').then(function(mat) {
-             var data_mat = mat.val()
-             var count = 0
+             var data_mat = mat.val();
+             var count = 0;
+             var nuevalinea = '';
              for(var key in data_mat){
-               count++
-               var descripcion = data_mat[key]["descripcion"]
-               var unidad = data_mat[key]["unidad"]
-               var cantidad = data_mat[key]["cantidad"]
-               var costo = data_mat[key]["costo"]
-               var importe = data_mat[key]["importe"]
-               var nuevalinea = '<div class="row" style="font-size: 11px;margin-top: -20px;">'
-                nuevalinea += '<div class="col s1">'
-                nuevalinea += '<p>HER-3%</p>'
-                nuevalinea += '</div>'
-                nuevalinea += '<div class="col s6">'
-                nuevalinea += '<p>'+descripcion+'</p>'
-                nuevalinea += '</div>'
-                nuevalinea += '<div class="col s1" style="text-align:center;">'
-                nuevalinea += '<p>'+unidad+'</p>'
-                nuevalinea += '</div>'
-                nuevalinea += '<div class="col s1" style="text-align:center;">'
-                nuevalinea += '<p>'+cantidad+'</p>'
-                nuevalinea += '</div>'
-                nuevalinea += '<div class="col s1" style="text-align:center;">'
-                nuevalinea += '<p>$'+number_format(costo,2)+'</p>'
-                nuevalinea += '</div>'
-                nuevalinea += '<div class="col s2" style="text-align:center;">'
-                nuevalinea += '<p>$'+number_format(importe,2)+'</p>'
-                nuevalinea += '</div>'
-                nuevalinea += '</div>'
-               var divx = 'herramienta'+mat.ref.parent.key
-               $('#'+divx).append(nuevalinea)
+               count++;
+               var descripcion = data_mat[key]["descripcion"];
+               var unidad = data_mat[key]["unidad"];
+               var cantidad = data_mat[key]["cantidad"];
+               var costo = data_mat[key]["costo"];
+               var importe = data_mat[key]["importe"];
+                nuevalinea += '<div class="row" style="font-size: 11px;margin-top: -20px;">';
+                nuevalinea += '<div class="col s1">';
+                nuevalinea += '<p>HER-3%</p>';
+                nuevalinea += '</div>';
+                nuevalinea += '<div class="col s6">';
+                nuevalinea += '<p>'+descripcion+'</p>';
+                nuevalinea += '</div>';
+                nuevalinea += '<div class="col s1" style="text-align:center;">';
+                nuevalinea += '<p>'+unidad+'</p>';
+                nuevalinea += '</div>';
+                nuevalinea += '<div class="col s1" style="text-align:center;">';
+                nuevalinea += '<p>'+cantidad+'</p>';
+                nuevalinea += '</div>';
+                nuevalinea += '<div class="col s1" style="text-align:center;">';
+                nuevalinea += '<p>$'+number_format(costo,2)+'</p>';
+                nuevalinea += '</div>';
+                nuevalinea += '<div class="col s2" style="text-align:center;">';
+                nuevalinea += '<p>$'+number_format(importe,2)+'</p>';
+                nuevalinea += '</div>';
+                nuevalinea += '</div>';
                 }
+                var divx = 'herramienta'+mat.ref.parent.key;
+                $('#'+divx).append(nuevalinea);
               })
                //Mano herramienta fin
       
@@ -339,24 +343,29 @@ detalle_presupuesto.on('value',function(snap){
               })
                //Maquinaria fin
       
+          //Se agrega el codigo
+          $("#lista_codigos").append(nuevoCodigo);
+          
+          //Calculo subtotal, indiecto y utilidad de cada codigo
+          var subs = $('#'+keys[i]).val(); //Subtotal del codigo
+          var indi = $('#indirectos').val(); //Indirectos del proyecto
+          var utili = $('#utilidad').val(); //Utilidad del proyecto
+          var sums = parseFloat(indi) + parseFloat(utili);
+          var importe_original = number_format(subs / (1 + parseFloat(sums)),2);
+          var indirecto = subs / (1 + parseFloat(sums)) * parseFloat(indi);
+          var utilidad = subs / (1 + parseFloat(sums)) * parseFloat(utili);
+          //Aplicando en html
+          $('#subtotal_codigo_'+keys[i]).text('$'+importe_original);
+          $('#indirectos_codigo'+keys[i]).text('Indirecto : $'+number_format(indirecto,2));
+          $('#utilidad_codigo'+keys[i]).text('Utilidad : $'+number_format(utilidad,2));
+          $('#total_codigo'+keys[i]).text('Subtotal : $'+subs);
             
-          $("#lista_codigos").append(nuevoCodigo)     
-          var subs = $('#'+keys[i]).val()
-          var indi = $('#indirectos').val()
-          var utili = $('#utilidad').val()
-          var sums = parseFloat(indi) + parseFloat(utili)
-          var diferencia = 1.02 - parseFloat(sums)
-          var primsub = parseFloat(subs) * parseFloat(diferencia)
-          console.log(primsub)
-          //$('#subtotal_codigo_'+keys[i]).text('$'+number_format(primsub,2))
-          $('#total_codigo'+keys[i]).text('Subtotal : $'+subs)
-            
-    }
+    }//FIN for para recorrer codigos
   })
 }
 
 
-setTimeout(function() { window.print(); }, 5000);
+setTimeout(function() { $('.loader-back').hide();window.print(); }, 5000);
 
 var mediaQueryList = window.matchMedia('print');
 mediaQueryList.addListener(function(mql) {
