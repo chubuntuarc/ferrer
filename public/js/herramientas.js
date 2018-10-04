@@ -1,6 +1,5 @@
 $(document).ready(function(){
   inicializarHerramienta()
-  leerDatosHerramienta()
   $('#herramienta-form').hide()
   $('#editardataherramienta').hide()
 })
@@ -9,6 +8,7 @@ var elementoEditar
 
 function inicializarHerramienta(){
   detalle_herramienta = firebase.database().ref().child('detalle_codigo').child(key).child('HER')
+  leerDatosHerramienta()
 }
 
 function enviarDatosHerramienta(){
@@ -26,9 +26,7 @@ function enviarDatosHerramienta(){
   })  
   $('#herramienta-form').hide()
   $('#nueva-herramienta').show()
-  M.toast({html: 'Guardado!', classes: 'rounded'});
-  actualizarSubtotal()
-  leerDatosHerramienta()
+  M.toast({html: 'Guardado!', classes: 'rounded'})
 }
 
 function editarDatosHerramienta(){
@@ -46,10 +44,8 @@ function editarDatosHerramienta(){
     })
   $('#herramienta-form').hide()
   $('#nueva-herramienta').show()
-  M.toast({html: 'Actualizado!', classes: 'rounded'});
-  actualizarSubtotal()
-  leerDatosHerramienta()
-  $('input').val('')
+  M.toast({html: 'Actualizado!', classes: 'rounded'})
+  $('input.validate').val('')
   $('#enviardataherramienta').show()
   $('#enviardataherramienta').hide()
 }
@@ -76,6 +72,7 @@ function leerDatosHerramienta(){
       sub += parseFloat(datos[key].importe)
     }
     $('#subtotal_herramienta').text('Subtotal : $' + number_format(sub,2))
+    actualizarSubtotal()
   })
 }
 
@@ -84,7 +81,6 @@ function borrarHerramienta(key){
     if(checkstr === true){
       var elementoABorrar = detalle_herramienta.child(key)
       elementoABorrar.remove()
-      leerDatosHerramienta()
     }else{
     return false;
     }

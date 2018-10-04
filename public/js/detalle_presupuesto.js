@@ -63,8 +63,7 @@ function guardarCodigo(){
   }).then((snap) => {
     $('#module-form').hide()
     $('#nuevo-codigo').show()
-    M.toast({html: 'Guardado!', classes: 'rounded'});
-    //listaCodigos()
+    M.toast({html: 'Guardado!', classes: 'rounded'})
   })
 }
 
@@ -90,8 +89,7 @@ function actualizarCodigo(){
     $('input.validate').val('')
     $('#guardar_codigo').show()
     $('#editar_codigo').hide()
-    M.toast({html: 'Actualizado!', classes: 'rounded'});
-    //listaCodigos()
+    M.toast({html: 'Actualizado!', classes: 'rounded'})
   })
 }
 
@@ -125,7 +123,7 @@ function borrarCodigo(key){
   var checkstr =  confirm('Deseas eliminar el codigo?');
     if(checkstr === true){
       var elementoABorrar = detalle_presupuesto.child(key)
-      elementoABorrar.remove().then((snap) => { listaCodigos() })
+      elementoABorrar.remove()
     }else{
     return false;
     }

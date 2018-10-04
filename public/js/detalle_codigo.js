@@ -4,13 +4,13 @@ var masterkey = $('#hiddenmasterkey').val()
 $(document).ready(function(){
   $('.loader-back').show()
   inicializar()
-  //leerDatos()
   $( '#materiales' ).load( 'materiales.html' );
   $( '#mano_obra' ).load( 'mano_obra.html' );
   $( '#herramientas' ).load( 'herramientas.html' );
   $( '#maquina' ).load( 'maquina.html' );
 })
 
+//Regresar a detalle de presupuesto
 function goback(){
   $('#hiddenkey').val(masterkey);
   $( '#work-place' ).load( 'detalle_presupuesto.html' );
@@ -41,7 +41,7 @@ function inicializar(){
 })
 }
 
-
+//Generar pdf con precios unitarios
 function fullPDF(){
   window.open('pdf_full.html?k=' + masterkey,'_blank');
 }

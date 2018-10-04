@@ -1,6 +1,5 @@
 $(document).ready(function(){
   inicializarMaquina()
-  leerDatosMaquina()
   $('#maquina-form').hide()
   $('#editardatamaquina').hide()
 })
@@ -9,6 +8,7 @@ var elementoEditar
 
 function inicializarMaquina(){
   detalle_maquina = firebase.database().ref().child('detalle_codigo').child(key).child('MAQ')
+  leerDatosMaquina()
 }
 
 function enviarDatosMaquina(){
@@ -26,9 +26,7 @@ function enviarDatosMaquina(){
   })  
   $('#maquina-form').hide()
   $('#nueva-maquina').show()
-  M.toast({html: 'Guardado!', classes: 'rounded'});
-  actualizarSubtotal()
-  leerDatosMaquina()
+  M.toast({html: 'Guardado!', classes: 'rounded'})
 }
 
 function editarDatosMaquina(){
@@ -46,10 +44,8 @@ function editarDatosMaquina(){
     })
   $('#maquina-form').hide()
   $('#nueva-maquina').show()
-  M.toast({html: 'Actualizado!', classes: 'rounded'});
-  actualizarSubtotal()
-  leerDatosMaquina()
-  $('input').val('')
+  M.toast({html: 'Actualizado!', classes: 'rounded'})
+  $('input.validate').val('')
   $('#enviardatamaquina').show()
   $('#enviardatamaquina').hide()
 }
@@ -76,6 +72,7 @@ function leerDatosMaquina(){
       sub += parseFloat(datos[key].importe)
     }
     $('#subtotal_maquina').text('Subtotal : $' + number_format(sub,2))
+    actualizarSubtotal()
   })
 }
 

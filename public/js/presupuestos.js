@@ -60,8 +60,7 @@ function guardarPresupuesto(){
   }).then((snap) => {
      $('#module-form').hide()
      $('#nuevo-presupuesto').show()
-     M.toast({html: 'Guardado!', classes: 'rounded'});
-     listaPresupuestos()
+     M.toast({html: 'Guardado!', classes: 'rounded'})
   }) 
 }
 
@@ -99,7 +98,6 @@ function actualizarPresupuesto(){
     $('#guardar_presupuesto').show()
     $('#editar_presupuesto').hide()
     M.toast({html: 'Actualizado!', classes: 'rounded'})
-    listaPresupuestos()
   }) 
 }
 
@@ -160,7 +158,7 @@ function borrarPresupuesto(key){
   var checkstr =  confirm('Deseas eliminar el presupuesto?');
     if(checkstr === true){
       var elementoABorrar = presupuestos.child(key)
-      elementoABorrar.remove().then((snap) => { listaPresupuestos() })
+      elementoABorrar.remove()
     }else{
     return false;
     }

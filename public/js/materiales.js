@@ -6,8 +6,6 @@ var utilidad = parseFloat($('#utilidad').val())
 
 $(document).ready(function(){
   inicializarMateriales()
-  leerDatosMateriales()
-  actualizarSubtotal()
   $('#material-form').hide()
   $('#editardatamaterial').hide()
 })
@@ -23,6 +21,7 @@ function inicializarMateriales(){
   importes_herramientas = firebase.database().ref().child('detalle_codigo').child(key).child('HER')
   importes_maquinas = firebase.database().ref().child('detalle_codigo').child(key).child('MAQ')
   presupuesto = firebase.database().ref().child('presupuestos').child(masterkey)
+  leerDatosMateriales()
 }
 
 
@@ -42,8 +41,6 @@ function enviarDatosMateriales(){
   $('#material-form').hide()
   $('#nuevo-material').show()
   M.toast({html: 'Guardado!', classes: 'rounded'});
-  actualizarSubtotal()
-  leerDatosMateriales()
 }
 
 function editarDatosMateriales(){
@@ -61,10 +58,8 @@ function editarDatosMateriales(){
     })
   $('#material-form').hide()
   $('#nuevo-material').show()
-  M.toast({html: 'Actualizado!', classes: 'rounded'});
-  actualizarSubtotal()
-  leerDatosMateriales()
-  $('input').val('')
+  M.toast({html: 'Actualizado!', classes: 'rounded'})
+  $('input.validate').val('')
   $('#enviardatamaterial').show()
   $('#editardatamaterial').hide()
 }
@@ -92,6 +87,7 @@ function leerDatosMateriales(){
     }
     $('#subtotal_materiales').text('Subtotal : $' + number_format(sub,2))
     $('.loader-back').hide()
+    actualizarSubtotal()
   })
 }
 
@@ -100,8 +96,6 @@ function borrarMaterial(key){
     if(checkstr === true){
       var elementoABorrar = detalle_material.child(key)
       elementoABorrar.remove()
-      actualizarSubtotal()
-      leerDatosMateriales()
     }else{
     return false;
     }

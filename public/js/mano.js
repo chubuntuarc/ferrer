@@ -1,6 +1,5 @@
 $(document).ready(function(){
   inicializarMano()
-  leerDatosMano()
   $('#mano-form').hide()
   $('#editardatamano').hide()
 })
@@ -9,6 +8,7 @@ var elementoEditar
 
 function inicializarMano(){
   detalle_mano = firebase.database().ref().child('detalle_codigo').child(key).child('MO')
+  leerDatosMano()
 }
 
 function enviarDatosMano(){
@@ -26,9 +26,7 @@ function enviarDatosMano(){
   })  
   $('#mano-form').hide()
   $('#nueva-mano').show()
-  M.toast({html: 'Guardado!', classes: 'rounded'});
-  actualizarSubtotal()
-  leerDatosMano()
+  M.toast({html: 'Guardado!', classes: 'rounded'})
 }
 
 function editarDatosMano(){
@@ -46,10 +44,8 @@ function editarDatosMano(){
     })
   $('#mano-form').hide()
   $('#nueva-mano').show()
-  M.toast({html: 'Actualizado!', classes: 'rounded'});
-  actualizarSubtotal()
-  leerDatosMano()
-  $('input').val('')
+  M.toast({html: 'Actualizado!', classes: 'rounded'})
+  $('input.validate').val('')
   $('#enviardatamano').show()
   $('#enviardatamano').hide()
 }
@@ -76,6 +72,7 @@ function leerDatosMano(){
       sub += parseFloat(datos[key].importe)
     }
     $('#subtotal_mano').text('Subtotal : $' + number_format(sub,2))
+    actualizarSubtotal()
   })
 }
 
@@ -84,7 +81,6 @@ function borrarMano(key){
     if(checkstr === true){
       var elementoABorrar = detalle_mano.child(key)
       elementoABorrar.remove()
-      leerDatosMano()
     }else{
     return false;
     }
