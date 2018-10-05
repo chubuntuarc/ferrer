@@ -63,7 +63,7 @@ detalle_presupuesto.on('value',function(snap){
           nuevaFila+='<td style="font-size: 13px;text-align:center;font-weight:bold;">'+datos[key].cantidad+'</td>'
           nuevaFila+='<td style="font-size: 13px;text-align:center;font-weight:bold;">'+datos[key].unidad+'</td>'
           nuevaFila+='<td style="font-size: 13px;text-align:center;font-weight:bold;">$'+number_format(datos[key].pu,2)+'</td>'
-          nuevaFila+='<input type="hidden" id="'+key+'" value="'+number_format(datos[key].pu,2)+'"/>'
+          nuevaFila+='<input type="hidden" id="'+key+'" value="'+datos[key].pu+'"/>'
           nuevaFila+='<td style="font-size: 13px;text-align:center;font-weight:bold;">$'+number_format(datos[key].importe,2)+'</td>'
           nuevaFila+='</tr>'
           $("#codigos-rows").append(nuevaFila)
@@ -347,18 +347,22 @@ detalle_presupuesto.on('value',function(snap){
           $("#lista_codigos").append(nuevoCodigo);
           
           //Calculo subtotal, indiecto y utilidad de cada codigo
-          var subs = $('#'+keys[i]).val(); //Subtotal del codigo
-          var indi = $('#indirectos').val(); //Indirectos del proyecto
-          var utili = $('#utilidad').val(); //Utilidad del proyecto
+          var subs = parseFloat($('#'+keys[i]).val()); //Subtotal del codigo
+          var indi = parseFloat($('#indirectos').val()); //Indirectos del proyecto
+          var utili = parseFloat($('#utilidad').val()); //Utilidad del proyecto
           var sums = parseFloat(indi) + parseFloat(utili);
           var importe_original = number_format(subs / (1 + parseFloat(sums)),2);
-          var indirecto = subs / (1 + parseFloat(sums)) * parseFloat(indi);
-          var utilidad = subs / (1 + parseFloat(sums)) * parseFloat(utili);
+          var indirecto = parseFloat(subs) / (1 + parseFloat(sums)) * parseFloat(indi);
+          var utilidad = parseFloat(subs) / (1 + parseFloat(sums)) * parseFloat(utili);
+          console.log('Subtotal: ' + importe_original)
+          console.log('Indirecto: ' + indirecto)
+          console.log('Utilidad: ' + utilidad)
+          console.log('Sub final: ' + subs)
           //Aplicando en html
           $('#subtotal_codigo_'+keys[i]).text('$'+importe_original);
           $('#indirectos_codigo'+keys[i]).text('Indirecto : $'+number_format(indirecto,2));
           $('#utilidad_codigo'+keys[i]).text('Utilidad : $'+number_format(utilidad,2));
-          $('#total_codigo'+keys[i]).text('Subtotal : $'+subs);
+          $('#total_codigo'+keys[i]).text('Subtotal : $'+number_format(subs,2));
             
     }//FIN for para recorrer codigos
   })
