@@ -169,20 +169,19 @@ function actualizarSubtotal(){
   })
   var subtotal_codigo = parseFloat(subtotal_materiales) + parseFloat(subtotal_mano) + parseFloat(subtotal_herramienta) + parseFloat(subtotal_maquina)
   $('#subtotal_codigo').text('$'+number_format(subtotal_codigo,2))
-  var nuevo_indirectos = subtotal_codigo * indirectos
-  var nuevo_utilidad = subtotal_codigo * utilidad
-  var suma = subtotal_codigo + nuevo_indirectos + nuevo_utilidad
-  console.log('x : ' + suma)
+  var nuevo_indirectos = parseFloat(subtotal_codigo) * parseFloat(indirectos)
+  var nuevo_utilidad = parseFloat(subtotal_codigo) * parseFloat(utilidad)
+  var suma = parseFloat(subtotal_codigo) + parseFloat(nuevo_indirectos) + parseFloat(nuevo_utilidad)
   $('#indirectos_codigo').text('Indirectos : $'+number_format(nuevo_indirectos,2))
   $('#utilidad_codigo').text('Utilidad : $'+number_format(nuevo_utilidad,2))
   $('#total_codigo').text('Total : $'+number_format(suma,2))
-  guardarSubtotal(suma)
+  guardarSubtotal(parseFloat(suma).toFixed(2))
 }
 
 function guardarSubtotal(subtotal){
   var cantidad = parseFloat(ca)
   var importe = parseFloat(subtotal) * parseFloat(cantidad)
-  detalle_presupuesto.update({ pu: subtotal.toString(), importe : importe })
+  detalle_presupuesto.update({ pu: parseFloat(subtotal), importe : parseFloat(importe) })
   actualizarSubtotalPresupuesto()
 }
 
