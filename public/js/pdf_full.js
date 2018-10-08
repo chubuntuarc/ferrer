@@ -349,20 +349,19 @@ detalle_presupuesto.on('value',function(snap){
           //Calculo subtotal, indiecto y utilidad de cada codigo
           var subs = parseFloat($('#'+keys[i]).val()); //Subtotal del codigo
           var indi = parseFloat($('#indirectos').val()); //Indirectos del proyecto
+          var indi2 = $('#indirectos').val().split('.')[1];
           var utili = parseFloat($('#utilidad').val()); //Utilidad del proyecto
+          var utili2 = $('#utilidad').val().split('.')[1];
+          var diferencia = 100 - parseInt(indi2) - parseInt(utili2);
           var sums = parseFloat(indi) + parseFloat(utili);
           var importe_original = number_format(subs / (1 + parseFloat(sums)),2);
           var indirecto = parseFloat(subs) / (1 + parseFloat(sums)) * parseFloat(indi);
           var utilidad = parseFloat(subs) / (1 + parseFloat(sums)) * parseFloat(utili);
-          console.log('Subtotal: ' + importe_original)
-          console.log('Indirecto: ' + indirecto)
-          console.log('Utilidad: ' + utilidad)
-          console.log('Sub final: ' + subs)
           //Aplicando en html
-          $('#subtotal_codigo_'+keys[i]).text('$'+importe_original);
-          $('#indirectos_codigo'+keys[i]).text('Indirecto : $'+number_format(indirecto,2));
-          $('#utilidad_codigo'+keys[i]).text('Utilidad : $'+number_format(utilidad,2));
-          $('#total_codigo'+keys[i]).text('Subtotal : $'+number_format(subs,2));
+          $('#subtotal_codigo_'+keys[i]).text(diferencia+'% : $'+importe_original);
+          $('#indirectos_codigo'+keys[i]).text('Indirecto '+indi2+'%: $'+number_format(indirecto,2));
+          $('#utilidad_codigo'+keys[i]).text('Utilidad '+utili2+'%: $'+number_format(utilidad,2));
+          $('#total_codigo'+keys[i]).text('Subtotal 100%: $'+number_format(subs,2));
             
     }//FIN for para recorrer codigos
   })
