@@ -169,13 +169,13 @@ function borrarPresupuesto(key){
 }
 
 //Master key for clone
-var mkey
+var mkey //Clave del presupuesto
 
 //Clonar presupuesto
 function clonarPresupuesto(key){
   mkey = key
-  presupuesto_clonar = firebase.database().ref().child('presupuestos').child(key)
-  presupuestos_clonar = firebase.database().ref().child('presupuestos')
+  presupuesto_clonar = firebase.database().ref().child('presupuestos').child(key) //Clonar del original
+  presupuestos_clonar = firebase.database().ref().child('presupuestos') //Crear uno nuevo
   presupuesto_clonar.on('value',function(snap){
     presupuestos_clonar.push(snap.val()).then((snap) => {
      const key = snap.key 
@@ -184,21 +184,35 @@ function clonarPresupuesto(key){
   })
 }
 
+var origin_arr = []
+var new_arr = []
+
 function clonarDetallePresupuesto(key){
   $('.loader-back').show()
-  detalle_presupuesto_clonar = firebase.database().ref().child('detalle_presupuestos').child(mkey)
-  detalle_presupuesto_nuevo_clonar = firebase.database().ref().child('detalle_presupuestos').child(key)
+  detalle_presupuesto_clonar = firebase.database().ref().child('detalle_presupuestos').child(mkey) //Clonar del presupuesto original
+  detalle_presupuesto_nuevo_clonar = firebase.database().ref().child('detalle_presupuestos').child(key) //Actualizar el nuevo
   detalle_presupuesto_clonar.on('value',function(snap){
     var datos = snap.val()
     for(var k in datos){
-      clonarDEtalleCodigo(k)
-      detalle_presupuesto_nuevo_clonar.push(datos[k])
+      origin_arr.push(k);
+        var nuevo = detalle_presupuesto_nuevo_clonar.push(datos[k]).key;
+      new_arr.push(nuevo);
     }
+    clonarDEtalleCodigo();
   })
 }
 
-function clonarDEtalleCodigo(k){
- setTimeout(function() { location.reload(); }, 5000) 
+function clonarDEtalleCodigo(){
+  setTimeout(function() { location.reload(); }, 5000);
+  /*var data_array = [];
+  for(var i=0;i<origin_arr.length;i++){
+    detalle_codigo_clonar = firebase.database().ref().child('detalle_codigo').child(origin_arr[i]); //Clonar del detalle_presupuesto original
+    detalle_codigo_nuevo_clonar = firebase.database().ref().child('detalle_codigo').child(new_arr[i]); //Actualizar el nuevo
+    detalle_codigo_clonar.once('value').then((snap) => {
+      //console.log(snap.val())
+       detalle_codigo_nuevo_clonar.update(snap.val());
+    });
+  }*/
 }
 //FIN del clonado
 
