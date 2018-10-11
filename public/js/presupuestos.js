@@ -7,6 +7,7 @@ $(document).ready(function(){
 })
 
 var presupuestos
+var elementoAEditar
 var elementoEditar
 
 //Inicializar objeto principal
@@ -92,13 +93,15 @@ function actualizarPresupuesto(){
     utilidad : utilidad,
     comment : comment
   }).then((snap) => {
-    $('#module-form').hide()
-    $('#nuevo-presupuesto').show()
-    $('input.validate').val('')
-    $('#guardar_presupuesto').show()
-    $('#editar_presupuesto').hide()
-    M.toast({html: 'Actualizado!', classes: 'rounded'})
-  }) 
+    $('#module-form').hide();
+    $('#nuevo-presupuesto').show();
+    $('input.validate').val('');
+    $('#guardar_presupuesto').show();
+    $('#editar_presupuesto').hide();
+    M.toast({html: 'Actualizado!', classes: 'rounded'});
+    var key = $('#presupuesto_key').val();
+    actualizarCodigos(key);
+  }); 
 }
 
 //Listado de los presupuestos creados
@@ -129,29 +132,30 @@ function listaPresupuestos(){
 
 //Llamar a edicion desde el listado
 function editarPresupuesto(key){
-  $('#module-form').show()
-  $('#nuevo-presupuesto').hide()
-  var elementoAEditar = presupuestos.child(key)
+  $('#presupuesto_key').val(key);
+  $('#module-form').show();
+  $('#nuevo-presupuesto').hide();
+  elementoAEditar = presupuestos.child(key);
   elementoAEditar.once('value', function(snap){
-    var datos = snap.val()
-    elementoEditar = elementoAEditar
-    $('#descripcion').val(datos.descripcion)
-    $('#procedimiento').val(datos.procedimiento)
-    $('#fecha').val(datos.fecha)
-    $('#ubicacion').val(datos.ubicacion)
-    $('#duracion').val(datos.duracion)
-    $('#notas').val(datos.notas)
-    $('#subtotal').val(datos.subtotal)
-    $('#iva').val(datos.iva)
-    $('#total').val(datos.total)
-    $('#indirectos').val(datos.indirectos)
-    $('#utilidad').val(datos.utilidad)
-    $('#comment').val(datos.comment)
-    M.updateTextFields()
-    $('select').formSelect()
-  })
-  $('#guardar_presupuesto').hide()
-  $('#editar_presupuesto').show()
+    var datos = snap.val();
+    elementoEditar = elementoAEditar;
+    $('#descripcion').val(datos.descripcion);
+    $('#procedimiento').val(datos.procedimiento);
+    $('#fecha').val(datos.fecha);
+    $('#ubicacion').val(datos.ubicacion);
+    $('#duracion').val(datos.duracion);
+    $('#notas').val(datos.notas);
+    $('#subtotal').val(datos.subtotal);
+    $('#iva').val(datos.iva);
+    $('#total').val(datos.total);
+    $('#indirectos').val(datos.indirectos);
+    $('#utilidad').val(datos.utilidad);
+    $('#comment').val(datos.comment);
+    M.updateTextFields();
+    $('select').formSelect();
+  });
+  $('#guardar_presupuesto').hide();
+  $('#editar_presupuesto').show();
 }
 
 function borrarPresupuesto(key){
@@ -197,6 +201,129 @@ function clonarDEtalleCodigo(k){
  setTimeout(function() { location.reload(); }, 5000) 
 }
 //FIN del clonado
+
+//Actualizar codigos con nuemro indirecto y utilidad
+function actualizarCodigos(key){
+      
+       firebase.database().ref().child('presupuestos').child(key).on('value',function(snap){
+         var datos = snap.val();
+         for(var key in datos){
+           $('#indirectos_h').val(datos.indirectos);
+           $('#utilidad_h').val(datos.utilidad);
+         }
+       });
+       firebase.database().ref().child('detalle_presupuestos').child(key).on('value',function(snap){
+        var datos = snap.val()
+        var masterkey = snap.key;
+          for(var key in datos){
+            presupuesto = firebase.database().ref().child('presupuestos').child(masterkey)
+            detalle_presupuesto = firebase.database().ref().child('detalle_presupuestos').child(masterkey).child(key)
+            detalles_presupuestos = firebase.database().ref().child('detalle_presupuestos').child(masterkey)
+            detalle_presupuesto.on('value',function(snap){
+               var datos = snap.val();
+                for(var k in datos){
+                  $('#cantidad_codigo_master').val(datos.cantidad);
+                }
+            });
+            importes_materiales = firebase.database().ref().child('detalle_codigo').child(key).child('MAT');
+            importes_mano = firebase.database().ref().child('detalle_codigo').child(key).child('MO');
+            importes_herramientas = firebase.database().ref().child('detalle_codigo').child(key).child('HER');
+            importes_maquinas = firebase.database().ref().child('detalle_codigo').child(key).child('MAQ');
+      
+            
+            importes_mano.on('value',function(snap){
+              var datos = snap.val();
+              var subtotal_mano = 0;
+              for(var key in datos){
+                if(isNaN(datos[key].importe)){
+                  subtotal_mano += 0
+                }else{
+                  subtotal_mano += parseFloat(datos[key].importe)
+                }
+              }
+              $('#subtotal_mano').val(subtotal_mano);
+            });
+            importes_herramientas.on('value',function(snap){
+              var datos = snap.val();
+              var subtotal_herramienta = 0;
+              for(var key in datos){
+                if(isNaN(datos[key].importe)){
+                  subtotal_herramienta += 0
+                }else{
+                  subtotal_herramienta += parseFloat(datos[key].importe)
+                }
+              }
+              $('#subtotal_herramienta').val(subtotal_herramienta);
+            });
+            importes_maquinas.on('value',function(snap){
+              var subtotal_maquina = 0;
+              var datos = snap.val()
+              for(var key in datos){
+                if(isNaN(datos[key].importe)){
+                  subtotal_maquina += 0
+                }else{
+                  subtotal_maquina += parseFloat(datos[key].importe)
+                }
+              }
+              $('#subtotal_maquina').val(subtotal_maquina);
+            });
+            importes_materiales.on('value',function(snap){
+              var datos = snap.val();
+              var subtotal_materiales = 0;
+              for(var key in datos){
+                if(isNaN(datos[key].importe)){
+                  subtotal_materiales += 0
+                }else{
+                  subtotal_materiales += parseFloat(datos[key].importe)
+                }
+              }
+              $('#subtotal_materiales').val(subtotal_materiales);
+              
+                var subtotal_materiales = parseFloat($('#subtotal_materiales').val());
+                var subtotal_mano = parseFloat($('#subtotal_mano').val());
+                var subtotal_herramienta = parseFloat($('#subtotal_herramienta').val());
+                var subtotal_maquina = parseFloat($('#subtotal_maquina').val());
+                
+                var subtotal_codigo = parseFloat(subtotal_materiales) + parseFloat(subtotal_mano) + parseFloat(subtotal_herramienta) + parseFloat(subtotal_maquina);
+               
+                var indirectos = parseFloat($('#indirectos_h').val());
+                var utilidad = parseFloat($('#utilidad_h').val());
+                var nuevo_indirectos = parseFloat(subtotal_codigo) * parseFloat(indirectos);
+                var nuevo_utilidad = parseFloat(subtotal_codigo) * parseFloat(utilidad);
+                
+                var suma = parseFloat(subtotal_codigo) + parseFloat(nuevo_indirectos) + parseFloat(nuevo_utilidad);
+                
+                var ca = $('#cantidad_codigo_master').val();
+                var cantidad = parseFloat(ca);
+                var importe = parseFloat(parseFloat(suma).toFixed(2)) * parseFloat(cantidad);
+                detalle_presupuesto.update({ pu: parseFloat(parseFloat(suma).toFixed(2)), importe : parseFloat(importe) });
+                
+                
+                detalles_presupuestos.on('value',function(snap){
+                  var datos = snap.val();
+                  var subtotal = 0;
+                  for(var key in datos){
+                    if(datos[key].importe >= 0){
+                        subtotal += parseFloat(datos[key].importe)
+                    }
+                  }
+                  presupuesto.update({ subtotal: subtotal.toString() })
+                  
+                  var sub = parseFloat(subtotal)
+                  var calc = 0.16
+                  var iva = sub * calc
+                  var total = iva + sub
+                  presupuesto.update({ iva: iva.toString(), total: total.toString() });
+                  
+                });
+            });
+            
+           
+  
+          }
+      });
+}
+//FIN Actualizar codigos con nuemro indirecto y utilidad
 
  //Convertir a moneda
 function number_format(amount, decimals) {
